@@ -1,0 +1,238 @@
+#take input
+
+echo enter your name
+read name 
+   echo "Name you entered is : $name"
+chmod u+x input.sh
+./input.sh
+
+
+#make dir and fil
+
+mkdir -p u1 u1/v1 u1/v2
+cd u1/v1
+touch 100.txt
+chmod u+x dir.sh
+
+#fname and lname
+echo "first name is : $1"
+echo "last name is : $2"
+echo "PID of the bash : $$"
+echo "shell file is :$0"
+echo "value of CLA passed :$*"
+echo "count of CLA passed :$#"
+
+#add code
+echo"first number"
+read z
+echo"last number"
+read y
+echo "sum:$(($z+$y))"
+
+#mkdir $2
+cd $2
+touch $1
+
+#check dir exist or not
+if [ -e $1 ]
+then 
+echo "dir exists"
+else
+echo "dir not exists"
+fi
+
+#total cmd argument passed
+if [ $# -gt 5 ]
+then
+echo "too many arguments"
+else
+echo "$*"
+fi
+
+#writable or readable
+if [ ! -e $1 ]
+then
+echo "file does not exists";
+elif [ ! -r $1 ]
+then
+echo "file is not readable"
+elif [ ! -w $1 ]
+then
+echo "file is not writable"
+else
+echo "file is both readable or writable"
+fi
+
+greatest of 3 number
+echo "enter 3 no:"
+read a b c
+if [ $a -gt $b ] && [ $a -gt $c ]
+then 
+echo "$a is greatest"
+elif [ $b -gt $a ] && [ $b -gt $c ]
+then
+echo "$b is greatest"
+else
+echo "$c is greatest"
+fi
+
+#sum +ve or -ve
+sum =$(($a+$b+$c))
+if [ $sum -gt 0 ]
+then 
+echo "positive"
+else
+echo "negitive"
+
+#enter 1-7 to see the days of the week
+echo Enter 1-7 to see the day of weeek
+read day
+case "day" in
+"1")echo "Monday";;
+"2")echo "Tuesday";;
+"3")echo "Wednesday";;
+"4")echo "Thrusday";;
+"5")echo "Friday";;
+"6")echo "Sat";;
+"7")echo "Sunday";;
+*) echo "enter the number between 1-7";;
+esac
+
+#for loop
+for i in $*
+do
+chmod 444 $i
+done
+
+#display all the data from any dir
+echo "enyter dir name or path:"
+read p
+cd $p
+for i in *
+do
+ls -l
+done 
+
+#take p as input
+echo "enter directory name or path:"
+read p
+cd $p
+for i in *
+do 
+if [ -f $i ]
+then
+ls
+else
+echo "its not a file"
+fi
+done
+
+#to count the number of sub-dir
+cd $1
+fc = 0
+for i in *
+do
+if [ -d $i ]
+then
+fc = $(($fc+1))
+fi
+done
+echo $fc
+
+#create using first word dir and file
+for i in $*
+do
+case $i in 
+f*)
+touch $i
+;;
+d*)
+mkdir $i
+;;
+*)
+echo "not found"
+;;
+esac
+done
+
+#file or dir
+if [[ -f "$1" || -d "$1" ]]
+then 
+echo "The first argument is a file or dir"
+fi
+
+if [[ -f "$2" || -d "$2" ]]
+then
+echo "the second argument is a file pr dir"
+fi
+if [[ -f "$3" || -d "$3" ]]
+then 
+echo "the third argument is a file or dir"
+fi
+echo "Bye!"
+
+#until loop
+a = 0
+until [ ! $a -lt 10 ]
+do 
+echo $a
+a=`expr $a+1`
+done
+
+#break and continue
+for index in 12345678910
+do
+if [ $index -le 3 ];
+then
+echo "continue"
+continue
+fi
+echo $index
+if [ $index -ge 8 ];
+then
+echo "break"
+break
+fi
+done
+
+#function
+hello() {
+echo "Hello world"
+hello
+
+#pass parameters to a function
+hello(){
+echo "hello world $1 $2"
+}
+hello fname lname
+
+#return code
+hello () {
+echo "Hello world $1 $2"
+return 10
+}
+Hello fname lname
+ret=$?
+echo "return vale is $ret"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

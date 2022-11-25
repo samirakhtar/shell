@@ -1,0 +1,225 @@
+delete dir
+rmdir c
+rm -r A
+
+copy
+cp A/B/C/1.txt A/B/D/2.txt
+
+Move
+mv A/B/D/2.txt day/monday
+
+link
+soft link
+ln -s existingFile file to be linked
+
+cat > a1
+friday
+ls -l a1
+ln -s a1 a2
+cat a2
+
+ls -l a1
+ls -l a2
+ls -i a1
+ls -i a2
+
+Hardlink
+cat >a3
+ls -l a3
+ln a3 a4
+ls -l a3
+ls -l a4
+ls -i a3
+ls -i a4
+
+nano a1 (write)
+cat a2
+
+nano a3 (write)
+
+restrict the user
+=> usermod -s /sbin/nologin user1
+   usermod -s /sbin/ksh user1
+
+create dir and restrict
+=> useradd u1
+  passwd u1
+  su - u1
+  mkdir d1
+  cd d1
+  touch f1 f2 
+  su - root
+  usermod -s /sbin/nologin u1
+
+create user u1 and to g1 g2
+=>useradd u1
+=>groupadd g1
+=>groupadd g2
+=>usermod -aG g1 u1
+=>cat /etc/group
+
+allow user to create file with default with 720
+=>useradd user1
+=>passwd user1
+=>su - user1
+=>umask 057
+
+create a file named 1.txt its default permissions
+=>useradd user1
+=>passwd user1
+=>su - user1
+=>umask 057
+=>touch 1.txt
+
+{partision}
+setting
+hardware
+hard disk
+nvme
+creat single split
+disk size = 2 gb
+name and finish
+
+-----------------partision---------------------
+#lsblk
+#fdisk /dev/nvme0n2
+command(m for help): n
+select(default p):p
+partition number(1-4, default 1):1
+                           :l to list all hexa decimal code search for linux
+command:                    t
+partition type : 31
+first sector ():
+last  sector (): +5M
+
+to check the partition => p
+No id in gdisk Id/83 Type/Linux
+
+command : w
+#partprob /dev/nvme0n2
+
+~Temporary mount~
+mount /dev/nvme0n2 stark
+du stark
+du -h stark
+cd stark
+mkdir s
+cd s
+touch 1 2 3 4 5 6 7 8 9
+ls 
+cd ..
+cd ..
+du -h stark
+du -h /dev/nvme0n2
+df -h /dev/nvme0n2
+
+~Parmanent mount~
+# blkid /dev/nvme0n2
+copy ~ uuid
+nano /etc/fstab
+UUID = paste /root/stark ext4 default 0 0
+partprobe /dev/nvme0n2
+
+~Temporary mount~
+mount /dev/nvme0n2 stark
+lsblk
+umount stark
+lsblk
+
+~Delete partition~
+#fdisk /dev/nvme0n2
+:d
+:w
+
+~Swap partition ~
+#fdisk /dev/nvme0n2
+:t
+select-> Linux swap
+:19
+:p
+:w
+#partprobe /dev/nvme0n2
+mkswap /dev/nvme0n2
+swapon -s
+swapon /dev/nvme0n2
+swapon -s
+free
+
+~Parmanent mount~
+#blkid
+copy ~ uuid
+nano /etc/fstab
+~UUID = ------- swap swap default 0 0 
+system restart for using swap
+#nano /etc/fstab
+~Delete UUID and save
+
+~LVM(logical volume manager)
+#lsblk
+fdisk /dev/nvme0n2
+command : n
+        : 1
+        : l to list all hexa decimal code (search for linux LVM)
+command : t
+partition type : 31
+command : p
+        : w
+{do the same step for rest disk}
+merging the space
+
+#pvcreate /dev/sdb1 /dev/sdc1 /dev/sdd 
+#pvs (to check the status)
+
+~Volume group create
+#vvgcreate myvg1 /dev/sdb1 /dev/sdc1
+#vgs (volume group status)
+#pvs
+
+#vgs 
+#lvcreate -l +500m -n mylv1 /dev/myvg1
+#vgs
+
+vgextend myvg1 /dev/sdd1
+vgs
+
+mkfs.ext4 /dev/myvg1/mylv1
+mkfs.ext4 /dev/myvg1/mylv2
+
+copy UUID of 1 
+# nano /etc/fstab
+	UUID = paste ext4 defaults 0 0
+:wq
+#mount -a
+
+~Extend LV
+lvs
+lvextend -L +1G /dev/myvg1rename/mylv1
+
+~LVM REMOVE:~
+ su - root
+passwd
+#lsblk 
+#lvs
+#lvremove /dev/myvg1/mylv1
+:y
+#lvs
+#lvremove /dev/myvg1/mylv2
+:y
+#vgs
+#vgremove /dev/myvg1
+#pvs
+#pvremove /dev/sdb1
+#pvs
+#pvremove /dev/sdc1
+#pvs
+
+~: Partition delete :~
+#fdisk /dev/sdb
+:d
+:w
+#fdisk /dev/sdb
+:d
+:w
+#fdisk /dev/sdd
+:d
+:w
